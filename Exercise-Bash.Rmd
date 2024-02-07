@@ -1,0 +1,113 @@
+---
+title: "Exercise-Bash"
+author: "Yuke Han"
+date: "2024-02-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Exercise-Bash
+
+## Question:
+
+### What is difference between shell and bash?
+
+### “shell” is a broad term that refers to any program that provides a command-line interface, “Bash” is a specific type of shell that is widely used in Unix/Linux systems.
+
+
+## Exercise 1:
+
+### What is your home directory? What files/folders exist in your home directory? Navigate to it and then navigate back to your notes.
+
+### My home directory: /Users/yukehan
+
+### Current directory:
+```{bash}
+pwd
+```
+
+### Navigate to my home directory:
+```{bash}
+cd /Users/yukehan
+pwd
+```
+
+### What files/folders exist in your home directory?
+```{bash}
+cd /Users/yukehan
+ls
+```
+
+### Navigate back to your notes
+```{bash}
+cd /Users/yukehan/Desktop/Stat_613
+pwd
+ls
+```
+
+
+## Exercise 2:
+
+### Where does the following command take you? How does it work?
+
+###     cd ~/../../..
+
+### This line of code will take me the root directory (/), no matter where I start from within the filesystem.
+
+### cd ~: go to me home directory. 
+
+### /..: move up one level. 
+
+
+## Exercise 3:
+
+### Read the manual page of ls. What does the a flag do? What does the l flag do?
+
+### -a flag: The -a option stands for "all". When using this flag with the ls command, it tells ls to list all entries, including hidden files and directories. 
+
+### -l flag: The -l option is for "long listing format". This flag changes the output format to a detailed listing that includes file permissions, the number of links, the owner name, the group name, the size of the file in bytes, and the timestamp of last modification. 
+
+
+## Exercise 4:
+
+### Create a new file with touch command. for instance touch myfile.txt. Run stat myfile.txt what information do you get?
+```{bash}
+touch myfile.txt
+stat myfile.txt
+```
+###  The stat command provide us with the file name, file size, blocks, IO block, file type, device, inote, links, access, uid, gid and birth. 
+
+
+## Exercise 5:
+
+### Run ls and from there list select a file. Now run ‘ls -l’ to display the details of the files, showing that it has been created or updated. what information does it give you regarding the myfile.txt and your selected file.
+```{bash}
+ls
+ls -l myfile.txt
+```
+
+### The ls -l code provide us with the information of this file, like permissions, link count, owner, group, size, modification time and file name. 
+
+
+## Exercise 6:
+
+### Add the following line This line is my first line to myfile.txt. Then run cat myfile.txt to show the line is added.
+```{bash}
+echo "This line is my first line" > myfile.txt
+cat myfile.txt
+```
+
+
+## Exercise 7:
+
+### Run touch myfile.txt then run ls -l myfile.txt does the “timestep” for the file myfile.txt is updated? Show the output. Note: Another common use of the touch command is to update the timestamps of an existing file.
+```{bash}
+touch myfile.txt
+ls -l myfile.txt
+```
+
+### Yes, the "timestep" for the file "myfile.txt" is updated. 
+
