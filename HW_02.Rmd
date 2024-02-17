@@ -1,0 +1,132 @@
+---
+title: "HW_02"
+author: "Yuke Han"
+date: "2024-02-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Problem 1:
+```{r}
+library(tidyverse)
+dt <- tribble(
+  ~x, ~y, ~w, ~z,
+  210, 300, 220, 180,
+  102, 100, 119, 187,
+  176, 175, 188, 173,
+  87, 95, 91, 94,
+  202, 210, 234, 218,
+  110, 122, 131, 128
+)
+dt
+```
+
+### 1_a:
+• Use and show a map function to find the “mean” of each column of the dt data table
+
+```{r}
+mean_dt <- map(dt, mean)
+mean_dt
+```
+
+### 1_b:
+• Use and show a map function to find the “standard deviation” of each column of the dt data table.
+
+```{r}
+sd_dt <- map(dt, ~sd(.x, na.rm = TRUE))
+sd_dt
+```
+
+### 1_c:
+• Use and show a map function that will calculate the “square root” of each value of each column of the data table dt.
+
+```{r}
+sqrt_dt <- map_df(dt, sqrt)
+sqrt_dt
+```
+
+### 1_d:
+• Use R code to find the “mean”, “max”, “1st Quartile”, “3rd Quartile”, “Median”, and “Min” for each column of the dt data table. (Hint: You do not have to use a map function)
+
+```{r}
+summary_stats <- dt %>%
+  summarise(across(everything(), list(mean = ~mean(.x, na.rm = TRUE),
+                                      max = ~max(.x, na.rm = TRUE),
+                                      Q1 = ~quantile(.x, 0.25, na.rm = TRUE),
+                                      median = ~median(.x, na.rm = TRUE),
+                                      Q3 = ~quantile(.x, 0.75, na.rm = TRUE),
+                                      min = ~min(.x, na.rm = TRUE)))) %>%
+  pivot_longer(cols = everything(), names_to = c(".value", "statistic"), names_pattern = "(.*)_(.*)")
+print(summary_stats)
+```
+
+
+## Problem 2:
+Write a function that uses a for loop that, for each iteration, randomly draws 5 observations from an exponential distribution with “rate” parameter 1 (use rexp()) and calculates its “mean”. It should do this 10,000 times. Choose an appropriate plot to plot the distribution of “means”.
+
+```{r}
+simulate_means <- function(n, size, rate) {
+  means <- numeric(n) 
+  for (i in 1:n) {
+    sample <- rexp(size, rate)
+    means[i] <- mean(sample)
+  }
+  return(means)
+}
+
+set.seed(123)
+means <- simulate_means(10000, 5, 1)
+hist(means, breaks = 50, main = "Distribution of Means", xlab = "Means", col = 'skyblue')
+
+```
+
+### 2_a:
+• Repeat part 1 by using a map_*() function.
+
+```{r}
+set.seed(123)
+means_map <- map_dbl(1:10000, ~mean(rexp(5, 1)))
+hist(means_map, breaks = 50, main = "Distribution of Means using map", xlab = "Means", col = 'green')
+
+```
+
+### 2_b:
+• Repeat part 1 by using the replicate() function.
+
+```{r}
+set.seed(123)
+means_replicate <- replicate(10000, mean(rexp(5, rate = 1)))
+hist(means_replicate, breaks = 50, main = "Distribution of Means using replicate", xlab = "Means", col = 'red')
+```
+
+2_c:
+• Use a another for loop that will print out plots for sample sizes of 5, 10, and 20 observations (instead of just 5).
+
+```{r}
+set.seed(123)
+sample_sizes <- c(5, 10, 20)
+for (size in sample_sizes) {
+  means <- replicate(10000, mean(rexp(size, rate = 1)))
+  hist(means, breaks = 50, main = paste("Distribution of Means for Sample Size", size), xlab = "Means", col = 'brown')
+}
+```
+
+
+## Problem 3:
+• Use and show R coding to calculate the “standard deviation” for each variable of the data table mtcars using the “Special For Loop Method”.
+
+```{r}
+data(mtcars)
+output <- vector("double", ncol(mtcars))
+for (i in seq_along(mtcars)) {
+  output[[i]] <- sd(mtcars[[i]], na.rm = TRUE)
+}
+names(output) <- names(mtcars)
+print(output)
+```
+
+
