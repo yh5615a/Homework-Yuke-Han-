@@ -1,0 +1,47 @@
+---
+title: "HW_03"
+author: "Yuke Han"
+date: "2024-02-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+```
+
+## Lubridate Assignment
+
+## Problem 1:
+• Load the wmata_ridership data frame into R from https://dcgerard.github.io/stat_412_612/data/wmata_ridership.csv. For each month, calculate the proportion of rides made on a given day of the month. Then make box plots of the proportions of ridership vs day of the weak. But exclude any days from 2004 and 2005.
+
+```{r}
+ridership <- read_csv("https://dcgerard.github.io/stat_412_612/data/wmata_ridership.csv", show_col_types = FALSE)
+
+ridership <- ridership %>%
+  mutate(Date = as.Date(Date)) %>%
+  filter(year(Date) != 2004, year(Date) != 2005)
+
+ridership <- ridership %>%
+  group_by(month = floor_date(Date, "month"), day_of_week = wday(Date, label = TRUE)) %>%
+  summarise(daily_total = sum(Total), .groups = 'drop') %>%
+  mutate(monthly_total = sum(daily_total)) %>%
+  ungroup() %>%
+  mutate(proportion = daily_total / monthly_total)
+
+ggplot(ridership, aes(x = day_of_week, y = proportion)) +
+  geom_boxplot() +
+  labs(title = "Proportion of Ridership by Day of the Week",
+       x = "Day of the Week",
+       y = "Proportion of Total Rides") +
+  theme_minimal()
+```
+
+
+## Problem 2:
+• Write only one line of the code to return only the leap years fo years 2024, 3021, 2000 or 1800, 800, 5050, 600 and 7156.
+```{r}
+Filter(leap_year, c(2024, 3021, 2000, 1800, 800, 5050, 600, 7156))
+```
+
